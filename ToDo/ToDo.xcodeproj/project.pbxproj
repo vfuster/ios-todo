@@ -99,9 +99,11 @@
 		24D715CF27150E6F000C6F7A /* ToDo */ = {
 			isa = PBXGroup;
 			children = (
+				24D7160227150F96000C6F7A /* Model */,
+				24D7160127150F60000C6F7A /* Controller */,
+				24D7160027150F44000C6F7A /* View */,
 				24D715D027150E6F000C6F7A /* AppDelegate.swift */,
 				24D715D227150E6F000C6F7A /* SceneDelegate.swift */,
-				24D715D427150E6F000C6F7A /* ViewController.swift */,
 				24D715D627150E6F000C6F7A /* Main.storyboard */,
 				24D715D927150E70000C6F7A /* Assets.xcassets */,
 				24D715DB27150E70000C6F7A /* LaunchScreen.storyboard */,
@@ -126,6 +128,28 @@
 				24D715F427150E70000C6F7A /* Info.plist */,
 			);
 			path = ToDoUITests;
+			sourceTree = "<group>";
+		};
+		24D7160027150F44000C6F7A /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		24D7160127150F60000C6F7A /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				24D715D427150E6F000C6F7A /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		24D7160227150F96000C6F7A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
