@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource {
   
-    private var tasks: [String] = []
+    private var tasks: [Task] = []
     
     
     @IBOutlet weak var tableView: UITableView!
@@ -30,7 +30,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
         
         let task = tasks[indexPath.row]
-        cell.textLabel?.text = task
+        cell.textLabel?.text = task.name
         
         return cell
     }
@@ -40,7 +40,8 @@ class ViewController: UIViewController, UITableViewDataSource {
         alert.addTextField(configurationHandler: nil)
         
         let addAction = UIAlertAction(title: "Adicionar", style: .default) { [unowned alert] _ in
-            if let task = alert.textFields![0].text {
+            if let taskName = alert.textFields![0].text {
+                let task = Task(name: taskName, isConcluded: false)
                 self.tasks.append(task)
                 self.tableView.reloadData()
             }
