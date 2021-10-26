@@ -7,17 +7,26 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
     private var tasks: [Task] = []
-    
     
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
+        tableView.delegate = self
+    }
+    
+    // MARK: DELEGATE
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedTask = tasks[indexPath.row]
+        let taskToBeUpdated = Task(name: selectedTask.name, isConcluded: !selectedTask.isConcluded)
+        tasks[indexPath.row] = taskToBeUpdated
         
+        tableView.reloadData()
     }
     
     // MARK: DATA SOURCE
@@ -31,6 +40,12 @@ class ViewController: UIViewController, UITableViewDataSource {
         
         let task = tasks[indexPath.row]
         cell.textLabel?.text = task.name
+        
+        if task.isConcluded == true {
+            cell.accessoryType = .checkmark
+        } else {
+            cell.accessoryType = .none
+        }
         
         return cell
     }
