@@ -43,6 +43,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         if task.isConcluded == true {
             cell.accessoryType = .checkmark
+            let attributes: [NSAttributedString.Key: Any] = [.strikethroughStyle: true]
+            let attributeString = NSAttributedString(string: task.name, attributes: attributes)
+            cell.textLabel?.attributedText = attributeString
         } else {
             cell.accessoryType = .none
         }
