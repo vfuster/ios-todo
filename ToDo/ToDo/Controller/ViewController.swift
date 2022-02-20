@@ -72,5 +72,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         // show alerta
         present(alert, animated: true, completion: nil)
     }
+    
+    @IBAction func tapSort(_ sender: Any) {
+        
+        let tasksOrdenadas = tasks.sorted { $0 > $1 }
+        tasks = tasksOrdenadas
+        
+        tableView.reloadData()
+    }
+    
 }
 
