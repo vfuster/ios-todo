@@ -51,9 +51,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     @IBAction func tapAdd(_ sender: Any) {
+        // Cria o alerta
         let alert = UIAlertController(title: "Digite a tarefa", message: nil, preferredStyle: .alert)
         alert.addTextField(configurationHandler: nil)
         
+        // Ações do alerta
         let addAction = UIAlertAction(title: "Adicionar", style: .default) { [unowned alert] _ in
             if let taskName = alert.textFields![0].text {
                 let task = Task(name: taskName, isConcluded: false)
@@ -62,7 +64,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             }
         }
         alert.addAction(addAction)
-        
+        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: nil))
+
+        // show alerta
         present(alert, animated: true, completion: nil)
     }
 }
