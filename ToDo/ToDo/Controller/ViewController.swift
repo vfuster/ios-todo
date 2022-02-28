@@ -9,6 +9,7 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
+    private let key = "key-tasks"
     private var tasks: [Task] = []
     
     @IBOutlet weak var tableView: UITableView!
@@ -17,16 +18,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-        
-        let decoder = JSONDecoder()
-        let userDefaults = UserDefaults.standard
-        let cleber = userDefaults.value(forKey: "tasks-name") as! Data
-        
-        if let tasksDecoded = try? decoder.decode([Task].self, from: cleber) {
-            self.tasks = tasksDecoded
-            tableView.reloadData()
-        }
-        
+        readTasksFromUserDefaults()
+        tableView.reloadData()
     }
     
     // MARK: DELEGATE
@@ -36,13 +29,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let taskToBeUpdated = Task(name: selectedTask.name, isConcluded: !selectedTask.isConcluded)
         tasks[indexPath.row] = taskToBeUpdated
      
-        let encoder = JSONEncoder()
-        
-        if let encodedTasks = try? encoder.encode(self.tasks) {
-            let tasksDefaults = UserDefaults.standard
-            tasksDefaults.set(encodedTasks, forKey: "tasks-name")
-        }
-        
+        saveTasksOnUserDefaults()
         tableView.reloadData()
     }
     
@@ -51,22 +38,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let action = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completionHandler) in
             
             self?.tasks.remove(at: indexPath.row)
+            self?.saveTasksOnUserDefaults()
             self?.tableView.reloadData()
             
-            let encoder = JSONEncoder()
-            
-            if let encodedTasks = try? encoder.encode(self?.tasks) {
-                let tasksDefaults = UserDefaults.standard
-                tasksDefaults.set(encodedTasks, forKey: "tasks-name")
-                print("Fabricio bobão passou por aqui!")
-            }
-
             completionHandler(true)
         }
         
         action.backgroundColor = .systemRed
         return UISwipeActionsConfiguration(actions: [action])
-        
     }
     
     // MARK: DATA SOURCE
@@ -103,37 +82,41 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             if let taskName = alert.textFields![0].text {
                 let task = Task(name: taskName, isConcluded: false)
                 self.tasks.append(task)
+                self.saveTasksOnUserDefaults()
                 self.tableView.reloadData()
-                
-                let encoder = JSONEncoder()
-                
-                if let encodedTasks = try? encoder.encode(self.tasks) {
-                    let tasksDefaults = UserDefaults.standard
-                    tasksDefaults.set(encodedTasks, forKey: "tasks-name")
-                }
             }
         }
         alert.addAction(addAction)
         alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: nil))
 
-        // show alerta
+        // show alert
         present(alert, animated: true, completion: nil)
     }
     
     @IBAction func tapSort(_ sender: Any) {
-        
-        let tasksOrdenadas = tasks.sorted { $0 > $1 }
-        tasks = tasksOrdenadas
-        
-        let encoder = JSONEncoder()
-        
-        if let encodedTasks = try? encoder.encode(self.tasks) {
-            let tasksDefaults = UserDefaults.standard
-            tasksDefaults.set(encodedTasks, forKey: "tasks-name")
-        }
-        
+        let sortedTasks = tasks.sorted { $0 > $1 }
+        tasks = sortedTasks
+        saveTasksOnUserDefaults()
         tableView.reloadData()
     }
     
-}
+    private func saveTasksOnUserDefaults() {
+        let encoder = JSONEncoder()
+        
+        if let encodedTasks = try? encoder.encode(tasks) {
+            let tasksDefaults = UserDefaults.standard
+            tasksDefaults.set(encodedTasks, forKey: key)
+        }
+    }
+    
+    private func readTasksFromUserDefaults() {
+        let decoder = JSONDecoder()
+        let userDefaults = UserDefaults.standard
+        
+        if let data = userDefaults.value(forKey: key) as? Data,
+            let tasksDecoded = try? decoder.decode([Task].self, from: data) {
+            self.tasks = tasksDecoded
+        }
+    }
 
+}
