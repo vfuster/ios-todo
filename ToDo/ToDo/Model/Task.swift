@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Task: Comparable {
+struct Task: Comparable, Codable {
     static func < (lhs: Task, rhs: Task) -> Bool {
         switch (lhs.isConcluded, rhs.isConcluded){
         case (true, false):

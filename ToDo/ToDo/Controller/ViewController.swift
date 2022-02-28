@@ -17,6 +17,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
+        
+        let decoder = JSONDecoder()
+        let userDefaults = UserDefaults.standard
+        let cleber = userDefaults.value(forKey: "tasks-name") as! Data
+        
+        if let tasksDecoded = try? decoder.decode([Task].self, from: cleber) {
+            self.tasks = tasksDecoded
+            tableView.reloadData()
+        }
+        
     }
     
     // MARK: DELEGATE
@@ -25,6 +35,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let selectedTask = tasks[indexPath.row]
         let taskToBeUpdated = Task(name: selectedTask.name, isConcluded: !selectedTask.isConcluded)
         tasks[indexPath.row] = taskToBeUpdated
+     
+        let encoder = JSONEncoder()
+        
+        if let encodedTasks = try? encoder.encode(self.tasks) {
+            let tasksDefaults = UserDefaults.standard
+            tasksDefaults.set(encodedTasks, forKey: "tasks-name")
+        }
         
         tableView.reloadData()
     }
@@ -64,6 +81,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 let task = Task(name: taskName, isConcluded: false)
                 self.tasks.append(task)
                 self.tableView.reloadData()
+                
+                let encoder = JSONEncoder()
+                
+                if let encodedTasks = try? encoder.encode(self.tasks) {
+                    let tasksDefaults = UserDefaults.standard
+                    tasksDefaults.set(encodedTasks, forKey: "tasks-name")
+                }
             }
         }
         alert.addAction(addAction)
@@ -77,6 +101,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         let tasksOrdenadas = tasks.sorted { $0 > $1 }
         tasks = tasksOrdenadas
+        
+        let encoder = JSONEncoder()
+        
+        if let encodedTasks = try? encoder.encode(self.tasks) {
+            let tasksDefaults = UserDefaults.standard
+            tasksDefaults.set(encodedTasks, forKey: "tasks-name")
+        }
         
         tableView.reloadData()
     }
