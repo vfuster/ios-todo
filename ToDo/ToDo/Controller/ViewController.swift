@@ -46,6 +46,29 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.reloadData()
     }
     
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let action = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completionHandler) in
+            
+            self?.tasks.remove(at: indexPath.row)
+            self?.tableView.reloadData()
+            
+            let encoder = JSONEncoder()
+            
+            if let encodedTasks = try? encoder.encode(self?.tasks) {
+                let tasksDefaults = UserDefaults.standard
+                tasksDefaults.set(encodedTasks, forKey: "tasks-name")
+                print("Fabricio bobão passou por aqui!")
+            }
+
+            completionHandler(true)
+        }
+        
+        action.backgroundColor = .systemRed
+        return UISwipeActionsConfiguration(actions: [action])
+        
+    }
+    
     // MARK: DATA SOURCE
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tasks.count
