@@ -37,11 +37,34 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         let action = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completionHandler) in
             
-            self?.tasks.remove(at: indexPath.row)
-            self?.saveTasksOnUserDefaults()
-            self?.tableView.reloadData()
-            
-            completionHandler(true)
+            let selectedTasks = self?.tasks[indexPath.row]
+           
+            if selectedTasks?.isConcluded == true {
+                self?.tasks.remove(at: indexPath.row)
+                self?.saveTasksOnUserDefaults()
+                self?.tableView.reloadData()
+                completionHandler(true)
+            } else {
+                // alerta deletar
+                let alert = UIAlertController(title: "Ação necessária", message: "Você quer realmente deletar", preferredStyle: .alert)
+                
+                let addActionDelete = UIAlertAction(title: "Deletar", style: .default) { _ in
+                    self?.tasks.remove(at: indexPath.row)
+                    self?.saveTasksOnUserDefaults()
+                    self?.tableView.reloadData()
+                    completionHandler(true)
+                }
+                alert.addAction(addActionDelete)
+                
+                let cancelAction = UIAlertAction(title: "Cancelar", style: .cancel) { _ in
+                    completionHandler(true)
+                }
+                
+                alert.addAction(cancelAction)
+                
+                self?.present(alert, animated: true, completion: nil)
+            }
+    
         }
         
         action.backgroundColor = .systemRed
